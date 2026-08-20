@@ -1,0 +1,6 @@
+.env
+.env.local
+data/store.json
+node_modules/
+npm-debug.log*
+.deploy-upload.ps1
