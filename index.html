@@ -1,0 +1,1290 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120f0e">
+  <meta name="description" content="тише. Свежая обжарка, мягкий вкус и понятный выбор кофе без лишних слов.">
+  <title>тише. Кофе в вашем темпе</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Manrope:wght@400;500;600&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23120f0e'/%3E%3Cpath d='M32 10C23 22 18 29 18 39a14 14 0 0 0 28 0c0-10-5-17-14-29Z' fill='%23f0b878'/%3E%3C/svg%3E">
+  <!-- DEPLOY STEP: replace preview values with the live absolute URL -->
+  <meta property="og:title" content="тише. Кофе в вашем темпе">
+  <meta property="og:description" content="Свежая обжарка, мягкий вкус и понятный выбор кофе.">
+  <meta property="og:image" content="https://example.com/assets/hero-ending.jpg">
+  <meta property="og:url" content="https://example.com/">
+  <style>
+    :root {
+      --canvas: #120f0e;
+      --panel: #1d1816;
+      --panel-soft: #251e1b;
+      --accent: #f0b878;
+      --accent-hover: #ffd09b;
+      --accent-muted: rgba(240, 184, 120, .18);
+      --text-secondary: #b9aea7;
+      --text-primary: #f4eee8;
+      --line: rgba(244, 238, 232, .18);
+      --control-line: rgba(244, 238, 232, .42);
+      --danger: #ef8e83;
+      --ease-out: cubic-bezier(.23, 1, .32, 1);
+      --ease-in-out: cubic-bezier(.77, 0, .175, 1);
+      --display: "Unbounded", "Arial Black", sans-serif;
+      --body: "Manrope", Arial, sans-serif;
+      --mono: "IBM Plex Mono", Consolas, monospace;
+      --tshadow: 0 1px 2px rgba(5, 5, 5, .95), 0 3px 12px rgba(5, 5, 5, .78), 0 10px 44px rgba(5, 5, 5, .8);
+    }
+
+    * { box-sizing: border-box; }
+    html { overflow-x: hidden; overflow-x: clip; scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      overflow-x: clip;
+      color: var(--text-primary);
+      background: var(--canvas);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 22% 20%, rgba(121, 54, 42, .16), transparent 30%),
+        radial-gradient(circle at 78% 62%, rgba(240, 184, 120, .08), transparent 28%),
+        linear-gradient(145deg, #120f0e 0%, #17110f 55%, #100f0f 100%);
+      animation: environment-drift 70s ease-in-out -17s infinite alternate;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: .05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+    }
+
+    @keyframes environment-drift {
+      from { transform: translate3d(-2%, -1%, 0) scale(1); }
+      to { transform: translate3d(2%, 1%, 0) scale(1.04); }
+    }
+
+    img { display: block; max-width: 100%; }
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    a { color: inherit; }
+
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: 12px;
+      z-index: 100;
+      padding: 10px 14px;
+      color: #21150d;
+      background: var(--accent);
+      border-radius: 10px;
+      transform: translateY(-150%);
+      transition: transform 180ms var(--ease-out);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    :focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    .nav {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 15;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(244, 238, 232, .1);
+      background: linear-gradient(to bottom, rgba(18, 15, 14, .78), rgba(18, 15, 14, .18));
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-inner {
+      width: min(1380px, calc(100% - 48px));
+      margin-inline: auto;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      font-family: var(--display);
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -.04em;
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-link {
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 180ms ease;
+    }
+    .nav-link:hover { color: var(--text-primary); }
+
+    .btn {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 20px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      color: #24170e;
+      background: var(--accent);
+      font-weight: 600;
+      line-height: 1;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform 150ms var(--ease-out), background-color 180ms ease, color 180ms ease;
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn:active { transform: scale(.97); }
+    .btn-quiet {
+      color: var(--text-primary);
+      background: rgba(29, 24, 22, .72);
+      border-color: var(--control-line);
+    }
+    .btn-quiet:hover { color: #24170e; background: var(--text-primary); }
+
+    .hero-journey { position: relative; height: 520vh; }
+    .scrub-stage {
+      position: sticky;
+      top: 0;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: #0f0e0d;
+    }
+
+    .hero-poster,
+    .hero-video,
+    .hero-base-scrim { position: absolute; inset: 0; }
+
+    .hero-poster {
+      z-index: 0;
+      background-position: center;
+      background-size: cover;
+      transform: scale(1.01);
+    }
+
+    .hero-video {
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      object-fit: cover;
+      opacity: 0;
+      transform: translateZ(0);
+      will-change: transform;
+      transition: opacity 420ms ease;
+    }
+    .video-ready .hero-video { opacity: 1; }
+    .video-failed .hero-video { display: none; }
+
+    .hero-base-scrim {
+      z-index: 2;
+      pointer-events: none;
+      background:
+        linear-gradient(to bottom, rgba(9, 8, 8, .48), transparent 28%, transparent 68%, rgba(9, 8, 8, .44)),
+        radial-gradient(ellipse 105% 90% at 50% 45%, rgba(10, 9, 9, 0) 28%, rgba(10, 9, 9, .68) 100%);
+    }
+
+    .loading-ring {
+      --ld: 126;
+      position: absolute;
+      z-index: 7;
+      right: 28px;
+      bottom: 28px;
+      width: 48px;
+      height: 48px;
+      padding: 7px;
+      color: var(--accent);
+      border-radius: 50%;
+      background: rgba(18, 15, 14, .55);
+      backdrop-filter: blur(10px);
+      transition: opacity 200ms ease;
+    }
+    .loading-ring circle { transition: stroke-dashoffset 160ms ease; }
+    .video-ready .loading-ring,
+    .video-failed .loading-ring { opacity: 0; }
+
+    .progress-thread {
+      position: absolute;
+      z-index: 5;
+      top: 72px;
+      bottom: 0;
+      left: 50%;
+      width: 1px;
+      overflow: hidden;
+      background: rgba(240, 184, 120, .12);
+      pointer-events: none;
+    }
+    .progress-thread::after {
+      content: "";
+      display: block;
+      width: 1px;
+      height: calc(var(--progress, 0) * 100%);
+      background: linear-gradient(to bottom, transparent, var(--accent));
+      box-shadow: 0 0 18px rgba(240, 184, 120, .45);
+    }
+
+    .band {
+      --k: 0;
+      position: absolute;
+      z-index: 4;
+      top: 50%;
+      width: min(520px, 42vw);
+      opacity: 0;
+      text-shadow: var(--tshadow);
+      pointer-events: none;
+    }
+    .band::before {
+      content: "";
+      position: absolute;
+      inset: -45% -18%;
+      z-index: -1;
+      pointer-events: none;
+      opacity: calc(.25 + .75 * var(--k));
+      background: radial-gradient(ellipse 70% 62% at 50% 50%, rgba(8, 7, 7, .72) 0%, rgba(8, 7, 7, .46) 46%, rgba(8, 7, 7, 0) 76%);
+    }
+    .band h1,
+    .band h2 {
+      margin: 0;
+      max-width: 13ch;
+      font-family: var(--display);
+      font-size: clamp(36px, 4.7vw, 72px);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -.055em;
+      text-wrap: balance;
+    }
+    .band-left { left: max(4vw, calc((100vw - 1380px) / 2)); transform: translateY(-50%); }
+    .band-right { right: max(4vw, calc((100vw - 1380px) / 2)); transform: translateY(-50%); }
+    .band-settle {
+      top: 18%;
+      left: 50%;
+      width: min(760px, 86vw);
+      text-align: center;
+      transform: translateX(-50%);
+    }
+    .band-settle h2 { max-width: none; }
+    .band-inner { will-change: transform, opacity; }
+    .band-1 .band-inner { opacity: var(--k); transform: scale(calc(.94 + .06 * var(--k))); }
+    .band-2 .band-inner { opacity: var(--k); transform: translateY(calc((1 - var(--k)) * -34px)); }
+    .band-3 .band-inner { opacity: var(--k); transform: scale(calc(.82 + .18 * var(--k))); }
+    .band-4 .band-inner { opacity: var(--k); transform: translateY(calc((1 - var(--k)) * 30px)); }
+
+    .static-hero {
+      display: none;
+      min-height: 100dvh;
+      padding: 112px 24px 54px;
+      align-items: end;
+      background:
+        linear-gradient(to top, rgba(18, 15, 14, .96) 5%, rgba(18, 15, 14, .18) 64%),
+        url("assets/hero-ending.jpg") center / cover no-repeat;
+    }
+    .static-copy { width: min(680px, 100%); margin-inline: auto; text-align: center; }
+    .static-copy h1 {
+      margin: 0 auto 20px;
+      max-width: 13ch;
+      font-family: var(--display);
+      font-size: clamp(38px, 11vw, 62px);
+      line-height: 1.06;
+      letter-spacing: -.055em;
+      text-wrap: balance;
+    }
+    .static-copy p { margin: 0 auto 28px; max-width: 46ch; color: #ded4cc; }
+
+    main { position: relative; z-index: 1; }
+    .section { position: relative; padding: clamp(88px, 11vw, 170px) 24px; }
+    .wrap { width: min(1240px, 100%); margin-inline: auto; }
+    .label {
+      margin: 0 0 20px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .section-title {
+      margin: 0;
+      max-width: 15ch;
+      font-family: var(--display);
+      font-size: clamp(36px, 5.7vw, 78px);
+      font-weight: 500;
+      line-height: 1.08;
+      letter-spacing: -.055em;
+      text-wrap: balance;
+    }
+    .section-lede { margin: 26px 0 0; max-width: 58ch; color: var(--text-secondary); font-size: clamp(17px, 1.8vw, 21px); }
+
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    .manifesto { min-height: 92dvh; display: grid; align-items: center; }
+    .manifesto-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr); gap: clamp(48px, 9vw, 140px); align-items: end; }
+    .manifesto-copy { padding-bottom: 18px; }
+    .manifesto-copy p { margin: 0; color: var(--text-secondary); font-size: 19px; max-width: 31ch; }
+    .manifesto-image {
+      position: relative;
+      min-height: 470px;
+      overflow: hidden;
+      border-radius: 16px;
+      background: url("assets/pour-detail.jpg") center / cover no-repeat;
+      box-shadow: 0 40px 100px rgba(5, 3, 2, .32);
+    }
+    .manifesto-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, transparent 45%, rgba(18, 15, 14, .62));
+    }
+
+    .taste-section { padding-top: 72px; }
+    .taste-shell {
+      overflow: hidden;
+      border-radius: 16px;
+      background: var(--panel);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .045), 0 50px 120px rgba(5, 3, 2, .28);
+    }
+    .taste-grid { display: grid; grid-template-columns: .85fr 1.15fr; min-height: 680px; }
+    .taste-controls { padding: clamp(34px, 6vw, 78px); display: flex; flex-direction: column; justify-content: space-between; }
+    .taste-stage {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 560px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(240, 184, 120, calc(.05 + var(--taste, 0) * .04)), transparent 38%),
+        #171311;
+    }
+    .taste-orbit {
+      width: min(31vw, 390px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(240, 184, 120, .25);
+      border-radius: 50%;
+      transform: rotate(calc(var(--taste, 0) * 25deg)) scale(calc(1 + var(--taste, 0) * .04));
+      transition: transform 650ms var(--ease-in-out), border-color 250ms ease;
+    }
+    .taste-orbit::before,
+    .taste-orbit::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(240, 184, 120, .12);
+    }
+    .taste-orbit::before { width: 72%; height: 72%; }
+    .taste-orbit::after { width: 42%; height: 42%; background: var(--accent-muted); }
+    .taste-name { position: relative; z-index: 1; padding: 20px; text-align: center; }
+    .taste-name strong { display: block; font-family: var(--display); font-size: clamp(28px, 4vw, 52px); line-height: 1.1; letter-spacing: -.045em; }
+    .taste-name span { display: block; margin-top: 13px; color: var(--text-secondary); }
+
+    .range-wrap { margin-top: 46px; }
+    .range-labels { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 12px; color: var(--text-secondary); font-size: 13px; }
+    .taste-range {
+      width: 100%;
+      height: 30px;
+      margin: 0;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    .taste-range::-webkit-slider-runnable-track { height: 3px; border-radius: 99px; background: linear-gradient(to right, var(--accent) 0 calc(var(--taste, 0) * 50%), rgba(244, 238, 232, .18) calc(var(--taste, 0) * 50%) 100%); }
+    .taste-range::-webkit-slider-thumb { width: 22px; height: 22px; margin-top: -9px; appearance: none; border: 5px solid var(--panel); border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .taste-range::-moz-range-track { height: 3px; border-radius: 99px; background: rgba(244, 238, 232, .18); }
+    .taste-range::-moz-range-progress { height: 3px; background: var(--accent); }
+    .taste-range::-moz-range-thumb { width: 14px; height: 14px; border: 5px solid var(--panel); border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+    .taste-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 34px; }
+    .taste-fact span { display: block; color: var(--text-secondary); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
+    .taste-fact strong { display: block; margin-top: 7px; font-size: 16px; font-weight: 500; }
+
+    .fresh-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, .8fr); gap: clamp(50px, 10vw, 150px); align-items: start; }
+    .fresh-copy { position: sticky; top: 120px; }
+    .fresh-steps { display: grid; gap: 54px; padding-top: 20px; }
+    .fresh-step { position: relative; padding-left: 58px; }
+    .fresh-step::before { content: ""; position: absolute; left: 8px; top: 9px; width: 11px; height: 11px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 9px var(--accent-muted); }
+    .fresh-step::after { content: ""; position: absolute; left: 13px; top: 28px; bottom: -48px; width: 1px; background: linear-gradient(var(--accent-muted), transparent); }
+    .fresh-step:last-child::after { display: none; }
+    .fresh-step h3 { margin: 0 0 10px; font-family: var(--display); font-size: 21px; font-weight: 500; letter-spacing: -.035em; }
+    .fresh-step p { margin: 0; color: var(--text-secondary); max-width: 39ch; }
+
+    .brew { overflow: hidden; }
+    .brew-list { margin-top: 64px; }
+    .brew-row {
+      display: grid;
+      grid-template-columns: 84px minmax(180px, .7fr) minmax(260px, 1fr);
+      gap: 28px;
+      align-items: baseline;
+      padding: 30px 0;
+      border-bottom: 1px solid var(--line);
+      transition: padding-left 220ms var(--ease-out), border-color 220ms ease;
+    }
+    .brew-row:last-child { border-bottom: 0; }
+    .brew-row:hover { padding-left: 14px; border-color: rgba(240, 184, 120, .4); }
+    .brew-time { color: var(--accent); font-family: var(--mono); font-size: 13px; }
+    .brew-row h3 { margin: 0; font-family: var(--display); font-size: clamp(22px, 3vw, 38px); font-weight: 500; letter-spacing: -.045em; }
+    .brew-row p { margin: 0; color: var(--text-secondary); }
+
+    .faq-grid { display: grid; grid-template-columns: .7fr 1.3fr; gap: clamp(48px, 9vw, 120px); }
+    .faq-list { border-top: 1px solid var(--line); }
+    details { border-bottom: 1px solid var(--line); }
+    summary {
+      position: relative;
+      padding: 27px 48px 27px 0;
+      font-size: 18px;
+      font-weight: 600;
+      list-style: none;
+      cursor: pointer;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; position: absolute; right: 8px; top: 26px; color: var(--accent); font-family: var(--mono); font-size: 22px; transition: transform 180ms var(--ease-out); }
+    details[open] summary::after { transform: rotate(45deg); }
+    details p { margin: -5px 48px 28px 0; color: var(--text-secondary); max-width: 66ch; }
+
+    .order { padding-bottom: 100px; }
+    .order-shell {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr .85fr;
+      gap: clamp(46px, 8vw, 120px);
+      padding: clamp(40px, 7vw, 90px);
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, rgba(240, 184, 120, .11), transparent 46%),
+        var(--panel);
+    }
+    .order-shell::before {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      right: -160px;
+      top: -170px;
+      border: 1px solid rgba(240, 184, 120, .2);
+      border-radius: 50%;
+      animation: ring-breathe 8s ease-in-out -2s infinite alternate;
+    }
+    @keyframes ring-breathe { from { transform: scale(.92); opacity: .45; } to { transform: scale(1.08); opacity: 1; } }
+    .order-copy { position: relative; z-index: 1; }
+    .order-copy p { margin: 25px 0 0; max-width: 45ch; color: var(--text-secondary); }
+    .order-form { position: relative; z-index: 1; display: grid; gap: 20px; }
+    .field { display: grid; gap: 8px; }
+    .field label { font-size: 14px; font-weight: 600; }
+    .field input,
+    .field select {
+      width: 100%;
+      min-height: 50px;
+      padding: 0 14px;
+      color: var(--text-primary);
+      border: 1px solid var(--control-line);
+      border-radius: 10px;
+      background: #171311;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+    .field input::placeholder { color: #92867f; opacity: 1; }
+    .field input:focus,
+    .field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-muted); outline: none; }
+    .helper { margin: 0; color: var(--text-secondary); font-size: 12px; }
+    .check { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: start; color: var(--text-secondary); font-size: 13px; }
+    .check input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--accent); }
+    .form-status { min-height: 24px; margin: 0; color: var(--accent-hover); font-size: 14px; }
+    .form-status.is-success { color: #b9d8b0; }
+    .form-status.is-error { color: #ffb3a7; }
+    .order-form .btn:disabled { cursor: wait; opacity: .68; }
+    .website-field { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+    .shop-head { display: flex; justify-content: space-between; gap: 32px; align-items: end; margin-bottom: 42px; }
+    .shop-head .section-lede { margin-bottom: 0; }
+    .product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .product-card { display: grid; min-height: 420px; padding: 28px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(145deg, rgba(240,184,120,.08), transparent 42%), var(--panel); }
+    .product-card h3 { margin: 0; font-family: var(--display); font-size: clamp(30px, 4vw, 48px); font-weight: 500; letter-spacing: -.045em; }
+    .product-card .product-notes { margin: 8px 0 0; color: var(--accent); font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    .product-card .product-description { color: var(--text-secondary); }
+    .product-card .product-buy { align-self: end; display: grid; gap: 14px; }
+    .product-card select { width: 100%; min-height: 48px; padding: 0 12px; color: var(--text-primary); border: 1px solid var(--control-line); border-radius: 10px; background: #171311; }
+    .price-line { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; }
+    .price-line strong { font-family: var(--display); font-size: 25px; font-weight: 500; }
+    .stock-note { color: var(--text-secondary); font-size: 12px; }
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+    .nav-icon { min-height: 42px; padding: 0 14px; color: var(--text-primary); border: 1px solid var(--control-line); border-radius: 999px; background: rgba(19,16,14,.7); cursor: pointer; }
+    .nav-icon:hover { border-color: var(--accent); }
+    .cart-count { display: inline-grid; place-items: center; min-width: 20px; height: 20px; margin-left: 6px; padding-inline: 5px; color: #21160f; border-radius: 99px; background: var(--accent); font-size: 11px; font-weight: 700; }
+
+    .cart-drawer { position: fixed; inset: 0; z-index: 100; visibility: hidden; pointer-events: none; }
+    .cart-drawer.is-open { visibility: visible; pointer-events: auto; }
+    .cart-backdrop { position: absolute; inset: 0; border: 0; background: rgba(5,4,3,.72); opacity: 0; backdrop-filter: blur(5px); transition: opacity 240ms ease; }
+    .cart-drawer.is-open .cart-backdrop { opacity: 1; }
+    .cart-panel { position: absolute; top: 0; right: 0; display: grid; grid-template-rows: auto 1fr auto; width: min(460px, 100%); height: 100%; padding: 26px; background: var(--panel); box-shadow: -30px 0 90px rgba(0,0,0,.35); transform: translate3d(100%,0,0); transition: transform 280ms var(--ease-out); }
+    .cart-drawer.is-open .cart-panel { transform: translate3d(0,0,0); }
+    .cart-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+    .cart-header h2 { margin: 0; font-family: var(--display); font-size: 30px; font-weight: 500; }
+    .icon-button { width: 42px; height: 42px; color: var(--text-primary); border: 1px solid var(--control-line); border-radius: 50%; background: transparent; cursor: pointer; }
+    .cart-items { overflow: auto; padding: 18px 0; }
+    .cart-empty { color: var(--text-secondary); }
+    .cart-item { display: grid; grid-template-columns: 1fr auto; gap: 10px 18px; padding: 17px 0; border-bottom: 1px solid var(--line); }
+    .cart-item strong { font-weight: 600; }
+    .cart-meta { color: var(--text-secondary); font-size: 13px; }
+    .quantity { display: flex; align-items: center; gap: 9px; }
+    .quantity button { width: 30px; height: 30px; color: var(--text-primary); border: 1px solid var(--control-line); border-radius: 50%; background: transparent; cursor: pointer; }
+    .cart-footer { padding-top: 20px; border-top: 1px solid var(--line); }
+    .cart-total { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 18px; }
+    .cart-total strong { font-family: var(--display); font-size: 27px; font-weight: 500; }
+
+    .checkout-layout { display: grid; grid-template-columns: .72fr 1.28fr; gap: clamp(38px, 7vw, 100px); }
+    .checkout-summary { align-self: start; padding: 24px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.02); }
+    .checkout-summary h3 { margin: 0 0 18px; font-family: var(--display); font-size: 25px; font-weight: 500; }
+    .summary-line { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; color: var(--text-secondary); border-bottom: 1px solid var(--line); }
+    .summary-total { color: var(--text-primary); font-weight: 700; border-bottom: 0; }
+    .choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .choice { display: flex; gap: 9px; align-items: center; min-height: 48px; padding: 0 13px; border: 1px solid var(--control-line); border-radius: 10px; cursor: pointer; }
+    .choice:has(input:checked) { border-color: var(--accent); background: var(--accent-muted); }
+    .choice input { accent-color: var(--accent); }
+    .checkout-note { color: var(--text-secondary); font-size: 12px; }
+
+    dialog { width: min(620px, calc(100% - 28px)); max-height: calc(100% - 28px); padding: 0; color: var(--text-primary); border: 1px solid var(--control-line); border-radius: 16px; background: var(--panel); box-shadow: 0 50px 150px rgba(0,0,0,.55); }
+    dialog::backdrop { background: rgba(5,4,3,.76); backdrop-filter: blur(5px); }
+    .account-box { padding: 28px; }
+    .dialog-head { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .dialog-head h2 { margin: 0; font-family: var(--display); font-size: 32px; font-weight: 500; }
+    .auth-tabs { display: flex; gap: 8px; margin: 24px 0 18px; }
+    .tab-button { min-height: 40px; padding: 0 14px; color: var(--text-secondary); border: 1px solid var(--control-line); border-radius: 999px; background: transparent; cursor: pointer; }
+    .tab-button.is-active { color: #21160f; border-color: var(--accent); background: var(--accent); }
+    .auth-form { display: grid; gap: 14px; }
+    .auth-form[hidden] { display: none; }
+    .account-orders { display: grid; gap: 12px; margin-top: 22px; }
+    .account-order { padding: 16px; border: 1px solid var(--line); border-radius: 11px; }
+    .account-order p { margin: 5px 0 0; color: var(--text-secondary); }
+
+    .mobile-nav { display: none; }
+
+    .footer { padding: 36px 24px 44px; border-top: 1px solid var(--line); }
+    .footer-inner { width: min(1240px, 100%); margin-inline: auto; display: flex; align-items: baseline; justify-content: space-between; gap: 30px; }
+    .footer p { margin: 0; color: var(--text-secondary); font-size: 13px; }
+
+    body.paused *, body.paused *::before, body.paused *::after { animation-play-state: paused !important; }
+
+    @media (max-width: 900px) {
+      .nav-links .nav-link { display: none; }
+      .manifesto-grid,
+      .taste-grid,
+      .fresh-grid,
+      .faq-grid,
+      .order-shell { grid-template-columns: 1fr; }
+      .product-grid { grid-template-columns: 1fr; }
+      .product-card { min-height: 340px; }
+      .checkout-layout { grid-template-columns: 1fr; }
+      .manifesto { min-height: auto; }
+      .manifesto-image { min-height: 420px; }
+      .taste-stage { min-height: 470px; }
+      .taste-orbit { width: min(64vw, 360px); }
+      .fresh-copy { position: static; }
+      .brew-row { grid-template-columns: 72px 1fr; }
+      .brew-row p { grid-column: 2; }
+    }
+
+    @media (max-width: 620px) {
+      body { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+      .nav { height: 66px; }
+      .nav-inner { width: calc(100% - 32px); align-items: center; }
+      .nav .brand { display: inline-flex; align-items: center; min-height: 44px; }
+      .nav .btn { min-height: 42px; padding-inline: 14px; font-size: 13px; }
+      .nav-actions { display: none; }
+      .shop-head { display: grid; }
+      .choice-row { grid-template-columns: 1fr; }
+      .section { padding-inline: 18px; }
+      .taste-controls { padding: 30px 22px 36px; }
+      .taste-stage { min-height: 390px; }
+      .taste-facts { gap: 18px; }
+      .brew-row { grid-template-columns: 1fr; gap: 8px; padding-block: 24px; }
+      .brew-row p { grid-column: 1; }
+      .order-shell { padding: 34px 22px; }
+      .footer-inner { display: grid; }
+      .static-hero {
+        min-height: 100svh;
+        padding: calc(92px + env(safe-area-inset-top)) 18px calc(108px + env(safe-area-inset-bottom));
+        background-position: 56% center;
+      }
+      .static-copy { text-align: left; }
+      .static-copy h1 { margin-inline: 0; font-size: clamp(36px, 10.4vw, 50px); }
+      .static-copy p { margin-inline: 0; font-size: 16px; line-height: 1.5; }
+      .static-copy .btn { width: 100%; min-height: 52px; }
+      .section { padding-block: 76px; }
+      .section-title { font-size: clamp(34px, 10vw, 48px); }
+      .product-card { min-height: 360px; padding: 22px; }
+      .product-card h3 { font-size: 34px; }
+      .product-card select,
+      .field input,
+      .field select { min-height: 52px; font-size: 16px; }
+      .quantity button { width: 44px; height: 44px; }
+      .cart-panel {
+        inset: auto 0 0;
+        position: absolute;
+        width: 100%;
+        height: min(86svh, 760px);
+        padding: 18px 18px calc(18px + env(safe-area-inset-bottom));
+        border: 1px solid var(--control-line);
+        border-bottom: 0;
+        border-radius: 22px 22px 0 0;
+        box-shadow: 0 -24px 90px rgba(0,0,0,.52);
+        transform: translate3d(0,105%,0);
+      }
+      .cart-panel::before { content: ""; position: absolute; top: 10px; left: 50%; width: 42px; height: 4px; border-radius: 99px; background: var(--control-line); transform: translateX(-50%); }
+      .cart-drawer.is-open .cart-panel { transform: translate3d(0,0,0); }
+      .cart-header { padding: 10px 0 14px; }
+      .icon-button { width: 44px; height: 44px; }
+      .cart-items { overscroll-behavior: contain; }
+      .cart-footer .btn { min-height: 52px; }
+      dialog { width: 100%; max-width: none; height: 100svh; max-height: none; margin: 0; border: 0; border-radius: 0; }
+      .account-box { min-height: 100%; padding: calc(22px + env(safe-area-inset-top)) 18px calc(24px + env(safe-area-inset-bottom)); }
+      .dialog-head { position: sticky; top: 0; z-index: 1; padding-bottom: 14px; background: var(--panel); }
+      .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; }
+      .auth-form .btn { min-height: 52px; }
+      .mobile-nav {
+        position: fixed;
+        inset: auto 10px calc(8px + env(safe-area-inset-bottom));
+        z-index: 40;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        min-height: 64px;
+        padding: 6px;
+        border: 1px solid rgba(244,238,232,.2);
+        border-radius: 18px;
+        background: rgba(29,24,22,.92);
+        box-shadow: 0 18px 60px rgba(0,0,0,.48);
+        backdrop-filter: blur(18px);
+      }
+      .mobile-nav-item {
+        position: relative;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 2px;
+        min-width: 48px;
+        min-height: 52px;
+        padding: 3px 2px;
+        color: var(--text-secondary);
+        border: 0;
+        border-radius: 13px;
+        background: transparent;
+        font: 600 10px/1.1 var(--body);
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 180ms ease, background-color 180ms ease, transform 150ms var(--ease-out);
+      }
+      .mobile-nav-item svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+      .mobile-nav-item.is-active { color: var(--text-primary); background: var(--accent-muted); }
+      .mobile-nav-item:active { transform: scale(.94); }
+      .mobile-cart-count { position: absolute; top: 3px; left: calc(50% + 7px); min-width: 17px; height: 17px; padding: 0 4px; color: #21160f; border: 2px solid var(--panel); border-radius: 99px; background: var(--accent); font-size: 9px; line-height: 13px; }
+    }
+
+    @media (max-width: 620px) and (orientation: landscape) {
+      body { padding-bottom: 0; }
+      .mobile-nav { inset: 8px 8px 8px auto; grid-template-columns: 60px; grid-template-rows: repeat(4, 1fr); width: 60px; min-height: 0; }
+      .static-hero { min-height: 100svh; padding: 78px 92px 30px 24px; }
+      .static-copy { margin-inline: 0; }
+      .static-copy h1 { max-width: 16ch; font-size: clamp(30px, 7vw, 44px); }
+      .static-copy p { margin-bottom: 18px; }
+      .static-copy .btn { width: auto; }
+    }
+
+    @media (orientation: landscape) and (pointer: coarse) and (max-height: 560px) {
+      body { padding-bottom: 0; }
+      .nav-actions { display: none; }
+      .mobile-nav { position: fixed; inset: 8px 8px 8px auto; z-index: 40; display: grid; grid-template-columns: 60px; grid-template-rows: repeat(4, 1fr); width: 60px; min-height: 0; padding: 6px; border: 1px solid rgba(244,238,232,.2); border-radius: 18px; background: rgba(29,24,22,.92); box-shadow: 0 18px 60px rgba(0,0,0,.48); backdrop-filter: blur(18px); }
+      .mobile-nav-item { position: relative; display: grid; place-items: center; align-content: center; gap: 2px; min-width: 48px; min-height: 48px; padding: 3px 2px; color: var(--text-secondary); border: 0; border-radius: 13px; background: transparent; font: 600 10px/1.1 var(--body); text-decoration: none; cursor: pointer; }
+      .mobile-nav-item svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+      .mobile-nav-item.is-active { color: var(--text-primary); background: var(--accent-muted); }
+      .mobile-cart-count { position: absolute; top: 1px; left: calc(50% + 6px); min-width: 17px; height: 17px; padding: 0 4px; color: #21160f; border: 2px solid var(--panel); border-radius: 99px; background: var(--accent); font-size: 9px; line-height: 13px; }
+      .static-hero { min-height: 100svh; padding: 76px 92px 28px 24px; }
+      .static-copy { width: min(650px,100%); margin-inline: 0; text-align: left; }
+      .static-copy h1 { max-width: 16ch; margin-inline: 0; font-size: clamp(30px,7vw,44px); }
+      .static-copy p { margin: 0 0 18px; }
+    }
+
+    @media (max-height: 560px) { .loading-ring, .progress-thread { display: none; } }
+
+    @media (max-width: 720px) {
+      .hero-journey { height: auto; }
+      .scrub-stage { display: none; }
+      .static-hero { display: grid; }
+    }
+    @media (orientation: portrait) and (max-width: 1024px) {
+      .hero-journey { height: auto; }
+      .scrub-stage { display: none; }
+      .static-hero { display: grid; }
+    }
+    @media (orientation: portrait) and (pointer: coarse) {
+      .hero-journey { height: auto; }
+      .scrub-stage { display: none; }
+      .static-hero { display: grid; }
+    }
+    @media (orientation: landscape) and (pointer: coarse) and (max-height: 560px) {
+      .hero-journey { height: auto; }
+      .scrub-stage { display: none; }
+      .static-hero { display: grid; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-journey { height: auto; }
+      .scrub-stage { display: none; }
+      .static-hero { display: grid; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0ms !important; scroll-behavior: auto !important; }
+      .reveal { opacity: 1; transform: none; }
+      .taste-orbit { transform: none; }
+    }
+
+    @media (pointer: coarse) {
+      .btn, summary { min-height: 44px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержанию</a>
+
+  <nav class="nav" aria-label="Основная навигация">
+    <div class="nav-inner">
+      <a class="brand" href="#top" aria-label="тише, на главную">тише</a>
+      <div class="nav-links">
+        <a class="nav-link" href="#about">О кофе</a>
+        <a class="nav-link" href="#fresh">Свежесть</a>
+        <a class="nav-link" href="#shop">Магазин</a>
+        <div class="nav-actions">
+          <button class="nav-icon" id="accountButton" type="button">Войти</button>
+          <button class="nav-icon" id="cartButton" type="button">Корзина <span class="cart-count" id="cartCount">0</span></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header id="top" class="hero-journey">
+    <div class="scrub-stage" id="scrubStage">
+      <div class="hero-poster" id="heroPoster" aria-hidden="true"></div>
+      <video class="hero-video" id="heroVideo" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
+      <div class="hero-base-scrim" aria-hidden="true"></div>
+      <div class="progress-thread" id="progressThread" aria-hidden="true"></div>
+
+      <svg class="loading-ring" id="loadingRing" viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="126" style="stroke-dashoffset:var(--ld,126)"/>
+      </svg>
+
+      <div class="band band-1 band-left" data-a="0" data-b="0.18">
+        <div class="band-inner"><h1>Утро начинается тише.</h1></div>
+      </div>
+      <div class="band band-2 band-right" data-a="0.22" data-b="0.42">
+        <div class="band-inner"><h2>Свежая обжарка. Мягкий вкус.</h2></div>
+      </div>
+      <div class="band band-3 band-left" data-a="0.48" data-b="0.68">
+        <div class="band-inner"><h2>Без жжёной горечи.</h2></div>
+      </div>
+      <div class="band band-4 band-settle" data-a="0.74" data-b="1">
+        <div class="band-inner"><h2>Ваша чашка. Ваш темп.</h2></div>
+      </div>
+    </div>
+
+    <div class="static-hero">
+      <div class="static-copy">
+        <h1>Кофе, с которым день становится тише.</h1>
+        <p>Свежая обжарка, мягкий вкус и понятный выбор без кофейного снобизма.</p>
+        <a class="btn" href="#choose">Выбрать кофе</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="section manifesto" id="about">
+      <div class="wrap manifesto-grid">
+        <div class="reveal">
+          <p class="label">Кофе как пауза</p>
+          <h2 class="section-title">Сначала аромат. Потом весь остальной день.</h2>
+        </div>
+        <div class="manifesto-copy reveal">
+          <p>Мы обжариваем кофе небольшими партиями и пишем о вкусе человеческими словами. Шоколадный, мягкий, яркий. Вы выбираете настроение, мы настраиваем остальное.</p>
+        </div>
+        <div class="manifesto-image reveal" aria-label="Крупный план приготовления эспрессо" role="img"></div>
+      </div>
+    </section>
+
+    <section class="section taste-section" id="choose">
+      <div class="wrap taste-shell reveal">
+        <div class="taste-grid" id="tasteModule" style="--taste:0">
+          <div class="taste-controls">
+            <div>
+              <p class="label">Найдите свою чашку</p>
+              <h2 class="section-title">Как вам вкуснее?</h2>
+              <p class="section-lede">Двигайте ползунок. Сложных терминов не будет.</p>
+              <div class="range-wrap">
+                <div class="range-labels"><span>Мягко</span><span>Ярко</span></div>
+                <input class="taste-range" id="tasteRange" type="range" min="0" max="2" step="1" value="0" aria-label="Выберите насыщенность кофе">
+              </div>
+              <div class="taste-facts" aria-live="polite">
+                <div class="taste-fact"><span>Вкус</span><strong id="tasteNotes">Какао, карамель</strong></div>
+                <div class="taste-fact"><span>Обжарка</span><strong id="tasteRoast">Средняя</strong></div>
+              </div>
+            </div>
+            <a class="btn" href="#order">Выбрать кофе</a>
+          </div>
+          <div class="taste-stage" aria-live="polite">
+            <div class="taste-orbit" aria-hidden="true"></div>
+            <div class="taste-name">
+              <strong id="tasteName">мягкий</strong>
+              <span id="tasteUse">Для эспрессо и молочных напитков</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="shop">
+      <div class="wrap">
+        <div class="shop-head reveal">
+          <div>
+            <p class="label">Кофе в зерне</p>
+            <h2 class="section-title">Выберите свой темп.</h2>
+          </div>
+          <p class="section-lede">Обжариваем после заказа. Цены и наличие приходят с сервера.</p>
+        </div>
+        <div class="product-grid" id="productGrid" aria-live="polite">
+          <p class="cart-empty">Загружаем кофе...</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="fresh">
+      <div class="wrap fresh-grid">
+        <div class="fresh-copy reveal">
+          <p class="label">Свежесть без догадок</p>
+          <h2 class="section-title">Дата обжарки, а не срок годности.</h2>
+          <p class="section-lede">На каждой пачке указано, когда кофе был обжарен и когда его лучше заваривать.</p>
+        </div>
+        <div class="fresh-steps">
+          <article class="fresh-step reveal">
+            <h3>Обжариваем под заказ</h3>
+            <p>Небольшими партиями два раза в неделю. Кофе не ждёт месяцами на складе.</p>
+          </article>
+          <article class="fresh-step reveal">
+            <h3>Даём зерну отдохнуть</h3>
+            <p>После обжарки зерну нужно несколько дней. Так эспрессо получается ровнее и слаще.</p>
+          </article>
+          <article class="fresh-step reveal">
+            <h3>Подсказываем рецепт</h3>
+            <p>На пачке есть стартовые настройки для вашего способа приготовления.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section brew">
+      <div class="wrap">
+        <div class="reveal">
+          <h2 class="section-title">Одна пачка. Три спокойных утра.</h2>
+          <p class="section-lede">Начните с рецепта, потом настройте чашку под себя.</p>
+        </div>
+        <div class="brew-list">
+          <article class="brew-row reveal">
+            <span class="brew-time">25-30 сек</span>
+            <h3>Кофемашина</h3>
+            <p>18 г кофе, 36 г напитка. Мягкое тело и плотная текстура.</p>
+          </article>
+          <article class="brew-row reveal">
+            <span class="brew-time">4-5 мин</span>
+            <h3>Турка</h3>
+            <p>10 г кофе на 100 мл воды. Нагревайте медленно и не доводите до кипения.</p>
+          </article>
+          <article class="brew-row reveal">
+            <span class="brew-time">3-4 мин</span>
+            <h3>Гейзер</h3>
+            <p>Средний помол и горячая вода в нижней части. Снимите с огня до шипения.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap faq-grid">
+        <div class="reveal">
+          <h2 class="section-title">Коротко о важном.</h2>
+        </div>
+        <div class="faq-list reveal">
+          <details>
+            <summary>Кофе будет горчить?</summary>
+            <p>Мы не уходим в жжёную обжарку. Если чашка горчит, начните с более крупного помола или сократите время приготовления.</p>
+          </details>
+          <details>
+            <summary>А кислинка есть?</summary>
+            <p>В мягком профиле она почти незаметна. В ярком есть сочная фруктовая нота, но без резкой кислотности.</p>
+          </details>
+          <details>
+            <summary>Когда кофе вкуснее всего?</summary>
+            <p>Обычно с 7 по 35 день после обжарки. Для эспрессо лучше дать свежему зерну несколько дней отдыха.</p>
+          </details>
+          <details>
+            <summary>Как хранить открытую пачку?</summary>
+            <p>Плотно закрывайте клапан и держите кофе в сухом тёмном шкафу. Холодильник не нужен.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section order" id="order">
+      <div class="wrap order-shell reveal">
+        <div class="order-copy">
+          <p class="label">Оформление заказа</p>
+          <h2 class="section-title">Кофе уже почти у вас.</h2>
+          <p>Можно заказать без регистрации. Доставка стоит 350 ₽, самовывоз бесплатный.</p>
+        </div>
+        <div class="checkout-layout">
+          <aside class="checkout-summary" aria-label="Состав заказа">
+            <h3>Ваш заказ</h3>
+            <div id="checkoutSummary"><p class="cart-empty">Корзина пока пуста.</p></div>
+          </aside>
+          <form class="order-form" id="checkoutForm" novalidate>
+            <select id="profile" hidden aria-hidden="true"><option>Мягкий</option><option>Баланс</option><option>Яркий</option></select>
+            <div class="field"><label for="checkoutName">Имя</label><input id="checkoutName" name="name" autocomplete="name" required minlength="2" maxlength="60"></div>
+            <div class="field"><label for="checkoutPhone">Телефон</label><input id="checkoutPhone" name="phone" autocomplete="tel" placeholder="+7 900 000-00-00" required minlength="7" maxlength="30"></div>
+            <div class="field"><label for="checkoutEmail">Email</label><input id="checkoutEmail" name="email" type="email" autocomplete="email" required maxlength="120"></div>
+            <div class="field">
+              <label>Получение</label>
+              <div class="choice-row">
+                <label class="choice"><input type="radio" name="fulfillment" value="delivery" checked> Доставка</label>
+                <label class="choice"><input type="radio" name="fulfillment" value="pickup"> Самовывоз</label>
+              </div>
+            </div>
+            <div class="field" id="addressField"><label for="checkoutAddress">Адрес доставки</label><input id="checkoutAddress" name="address" autocomplete="street-address" placeholder="Город, улица, дом, квартира" minlength="8"></div>
+            <div class="field" id="pickupField" hidden><label for="pickupTime">Когда удобно забрать</label><input id="pickupTime" name="pickupTime" placeholder="Например, завтра после 18:00" maxlength="60"></div>
+            <div class="field"><label for="checkoutComment">Комментарий</label><input id="checkoutComment" name="comment" placeholder="Помол, домофон или пожелание" maxlength="300"></div>
+            <label class="check"><input name="consent" type="checkbox" required><span>Согласен на обработку данных для оформления заказа</span></label>
+            <button class="btn" type="submit">Создать заказ и оплатить</button>
+            <p class="checkout-note">Сейчас включена тестовая оплата. Банковская карта не потребуется.</p>
+            <p class="form-status" id="checkoutStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <a class="brand" href="#top">тише</a>
+      <p>Спокойный кофе для обычного утра. <a href="/admin.html">Админка</a></p>
+      <p>© 2026</p>
+    </div>
+  </footer>
+
+  <nav class="mobile-nav" aria-label="Навигация на телефоне">
+    <a class="mobile-nav-item is-active" href="#top" data-mobile-section="top" aria-label="Главная">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></svg><span>Главная</span>
+    </a>
+    <a class="mobile-nav-item" href="#shop" data-mobile-section="shop" aria-label="Магазин">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1 11H5L4 10Z"/><path d="M8 10a4 4 0 0 1 8 0"/></svg><span>Кофе</span>
+    </a>
+    <button class="mobile-nav-item" id="mobileCartButton" type="button" aria-label="Открыть корзину">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 8H6"/></svg><span>Корзина</span><span class="mobile-cart-count" id="mobileCartCount">0</span>
+    </button>
+    <button class="mobile-nav-item" id="mobileAccountButton" type="button" aria-label="Открыть личный кабинет">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span id="mobileAccountLabel">Войти</span>
+    </button>
+  </nav>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <button class="cart-backdrop" id="cartBackdrop" type="button" aria-label="Закрыть корзину"></button>
+    <div class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+      <div class="cart-header"><h2 id="cartTitle">Корзина</h2><button class="icon-button" id="cartClose" type="button" aria-label="Закрыть">×</button></div>
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-footer"><div class="cart-total"><span>Итого</span><strong id="cartTotal">0 ₽</strong></div><a class="btn" id="checkoutLink" href="#order">Оформить заказ</a></div>
+    </div>
+  </aside>
+
+  <dialog id="accountDialog">
+    <div class="account-box">
+      <div class="dialog-head"><h2 id="accountTitle">Личный кабинет</h2><button class="icon-button" id="accountClose" type="button" aria-label="Закрыть">×</button></div>
+      <div id="authArea">
+        <div class="auth-tabs"><button class="tab-button is-active" data-auth-tab="login" type="button">Войти</button><button class="tab-button" data-auth-tab="register" type="button">Регистрация</button></div>
+        <form class="auth-form" id="loginForm"><div class="field"><label for="loginEmail">Email</label><input id="loginEmail" name="email" type="email" required></div><div class="field"><label for="loginPassword">Пароль</label><input id="loginPassword" name="password" type="password" required></div><button class="btn" type="submit">Войти</button></form>
+        <form class="auth-form" id="registerForm" hidden><div class="field"><label for="registerName">Имя</label><input id="registerName" name="name" required></div><div class="field"><label for="registerPhone">Телефон</label><input id="registerPhone" name="phone" required></div><div class="field"><label for="registerEmail">Email</label><input id="registerEmail" name="email" type="email" required></div><div class="field"><label for="registerPassword">Пароль от 8 символов</label><input id="registerPassword" name="password" type="password" minlength="8" required></div><button class="btn" type="submit">Создать аккаунт</button></form>
+        <p class="form-status" id="authStatus" role="status"></p>
+      </div>
+      <div id="profileArea" hidden><p id="profileGreeting"></p><div class="account-orders" id="accountOrders"></div><button class="tab-button" id="logoutButton" type="button">Выйти</button></div>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const GATES = [
+        "(max-width: 720px)",
+        "(orientation: portrait) and (max-width: 1024px)",
+        "(orientation: portrait) and (pointer: coarse)",
+        "(orientation: landscape) and (pointer: coarse) and (max-height: 560px)",
+        "(prefers-reduced-motion: reduce)"
+      ];
+
+      const hero = document.querySelector(".hero-journey");
+      const stage = document.getElementById("scrubStage");
+      const video = document.getElementById("heroVideo");
+      const poster = document.getElementById("heroPoster");
+      const ring = document.getElementById("loadingRing");
+      const progressThread = document.getElementById("progressThread");
+      const bands = [...document.querySelectorAll(".band")].map((el) => ({
+        el,
+        a: Number(el.dataset.a),
+        b: Number(el.dataset.b),
+        op: -1,
+        k: -1
+      }));
+
+      const VIDEO_URL = "assets/hero-scrub.mp4";
+      const VIDEO_BYTES = 1297713;
+      let initialized = false;
+      let scrubOn = false;
+      let heroOnScreen = true;
+      let target = 0;
+      let shown = 0;
+      let rafId = null;
+      let lastTick = 0;
+      let seekBusy = false;
+      let pendingTime = null;
+      let objectUrl = "";
+
+      const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+      const smoothstep = (p, e0, e1) => {
+        const t = clamp((p - e0) / Math.max(.0001, e1 - e0), 0, 1);
+        return t * t * (3 - 2 * t);
+      };
+
+      function heroProgress() {
+        const rect = hero.getBoundingClientRect();
+        const travel = Math.max(1, hero.offsetHeight - window.innerHeight);
+        return clamp(-rect.top / travel, 0, 1);
+      }
+
+      function requestSeek(time) {
+        if (!video.duration || !Number.isFinite(time)) return;
+        if (seekBusy) {
+          pendingTime = time;
+          return;
+        }
+        if (Math.abs(video.currentTime - time) < .018) return;
+        seekBusy = true;
+        video.currentTime = clamp(time, 0, Math.max(0, video.duration - .02));
+      }
+
+      video.addEventListener("seeked", () => {
+        seekBusy = false;
+        if (pendingTime !== null) {
+          const time = pendingTime;
+          pendingTime = null;
+          requestSeek(time);
+        }
+      });
+
+      video.addEventListener("error", () => {
+        seekBusy = false;
+        pendingTime = null;
+        stage.classList.add("video-failed");
+      });
+
+      function updateCaptions(p) {
+        bands.forEach((band, index) => {
+          const f = Math.min(.02, (band.b - band.a) / 3);
+          const easeIn = index === 0 ? 1 : smoothstep(p, band.a, band.a + f);
+          const easeOut = index === bands.length - 1 ? 1 : 1 - smoothstep(p, band.b - f, band.b);
+          const opacity = p >= band.a && p <= band.b ? easeIn * easeOut : 0;
+          const ramp = Math.min(.032, (band.b - band.a) * .35);
+          const rawK = clamp((p - band.a) / Math.max(.001, ramp), 0, 1);
+          const k = index === 0 && p <= band.b ? 1 : rawK;
+          if (Math.abs(opacity - band.op) > .008) {
+            band.el.style.opacity = opacity.toFixed(3);
+            band.op = opacity;
+          }
+          if (Math.abs(k - band.k) > .008) {
+            band.el.style.setProperty("--k", k.toFixed(3));
+            band.k = k;
+          }
+        });
+        progressThread.style.setProperty("--progress", p.toFixed(3));
+      }
+
+      function tick(now) {
+        const dt = Math.min(100, now - (lastTick || now));
+        lastTick = now;
+        const smoothing = .16;
+        shown += (target - shown) * (1 - Math.pow(1 - smoothing, dt / 16.667));
+        if (Math.abs(target - shown) < .0005) {
+          shown = target;
+          rafId = null;
+          lastTick = 0;
+        } else {
+          rafId = requestAnimationFrame(tick);
+        }
+        requestSeek(shown * video.duration);
+        updateCaptions(shown);
+      }
+
+      function onScroll() {
+        target = heroProgress();
+        if (rafId === null && heroOnScreen) rafId = requestAnimationFrame(tick);
+      }
+
+      function failVideo() {
+        stage.classList.add("video-failed");
+      }
+
+      async function loadHeroBlob() {
+        const ctrl = new AbortController();
+        let watchdog = setTimeout(() => ctrl.abort(), 20000);
+        const response = await fetch(VIDEO_URL, { priority: "low", signal: ctrl.signal });
+        if (!response.ok) throw new Error("video fetch failed");
+        const total = Number(response.headers.get("Content-Length")) || VIDEO_BYTES;
+        const reader = response.body.getReader();
+        const chunks = [];
+        let got = 0;
+        let lastRing = 0;
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          clearTimeout(watchdog);
+          watchdog = setTimeout(() => ctrl.abort(), 20000);
+          chunks.push(value);
+          got += value.length;
+          const fraction = Math.min(1, got / total);
+          const now = performance.now();
+          if (now - lastRing > 100 || fraction === 1) {
+            lastRing = now;
+            ring.style.setProperty("--ld", String(Math.round(126 * (1 - fraction))));
+          }
+        }
+        clearTimeout(watchdog);
+        ring.style.setProperty("--ld", "0");
+        objectUrl = URL.createObjectURL(new Blob(chunks, { type: "video/mp4" }));
+        video.src = objectUrl;
+        video.load();
+        video.addEventListener("canplay", () => {
+          requestSeek(heroProgress() * video.duration);
+          stage.classList.add("video-ready");
+        }, { once: true });
+      }
+
+      function initHeroOnce() {
+        if (initialized) return;
+        initialized = true;
+        poster.style.backgroundImage = "url('assets/hero-poster.jpg')";
+        const posterImage = new Image();
+        let started = false;
+        const start = () => {
+          if (started) return;
+          started = true;
+          loadHeroBlob().catch(failVideo);
+        };
+        posterImage.onload = start;
+        posterImage.onerror = start;
+        posterImage.src = "assets/hero-poster.jpg";
+        setTimeout(start, 4000);
+      }
+
+      function enableScrub() {
+        if (scrubOn) return;
+        scrubOn = true;
+        initHeroOnce();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        bands.forEach((band) => { band.op = -1; band.k = -1; });
+        shown = heroProgress();
+        target = shown;
+        updateCaptions(shown);
+        onScroll();
+      }
+
+      function disableScrub() {
+        if (!scrubOn) return;
+        scrubOn = false;
+        window.removeEventListener("scroll", onScroll);
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+
+      function applyHeroMode() {
+        if (GATES.some((query) => matchMedia(query).matches)) disableScrub();
+        else enableScrub();
+      }
+
+      const mediaQueries = GATES.map((query) => matchMedia(query));
+      mediaQueries.forEach((query) => query.addEventListener("change", applyHeroMode));
+
+      const heroObserver = new IntersectionObserver(([entry]) => {
+        heroOnScreen = entry.isIntersecting;
+        if (heroOnScreen && scrubOn) onScroll();
+      }, { rootMargin: "10% 0px" });
+      heroObserver.observe(hero);
+
+      document.querySelectorAll(".reveal").forEach((element, index) => {
+        element.style.transitionDelay = `${Math.min(index % 3, 2) * 70}ms`;
+      });
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("in");
+          revealObserver.unobserve(entry.target);
+          setTimeout(() => { entry.target.style.transitionDelay = "0ms"; }, 850);
+        });
+      }, { threshold: .16 });
+      document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
+
+      const profiles = [
+        { name: "мягкий", notes: "Какао, карамель", roast: "Средняя", use: "Для эспрессо и молочных напитков" },
+        { name: "баланс", notes: "Шоколад, орех", roast: "Средняя", use: "Для кофемашины, турки и гейзера" },
+        { name: "яркий", notes: "Красные ягоды", roast: "Светлее средней", use: "Для чёрного кофе и долгого послевкусия" }
+      ];
+      const tasteRange = document.getElementById("tasteRange");
+      const tasteModule = document.getElementById("tasteModule");
+      const profileSelect = document.getElementById("profile");
+      function updateTaste() {
+        const index = Number(tasteRange.value);
+        const profile = profiles[index];
+        tasteModule.style.setProperty("--taste", String(index));
+        document.getElementById("tasteName").textContent = profile.name;
+        document.getElementById("tasteNotes").textContent = profile.notes;
+        document.getElementById("tasteRoast").textContent = profile.roast;
+        document.getElementById("tasteUse").textContent = profile.use;
+        profileSelect.selectedIndex = index;
+      }
+      tasteRange.addEventListener("input", updateTaste);
+      updateTaste();
+
+      document.addEventListener("visibilitychange", () => {
+        document.body.classList.toggle("paused", document.hidden);
+      });
+
+      applyHeroMode();
+      window.addEventListener("resize", () => { if (scrubOn) onScroll(); }, { passive: true });
+      window.addEventListener("beforeunload", () => { if (objectUrl) URL.revokeObjectURL(objectUrl); });
+    })();
+  </script>
+  <script src="/shop.js"></script>
+</body>
+</html>
