@@ -126,10 +126,10 @@
   function closeCart() { cartDrawer.classList.remove("is-open"); cartDrawer.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; }
 
   async function loadProducts() {
+    if (staticDemo) { state.products = demoProducts; renderProducts(); renderCart(); return; }
     try {
       const data = await request("/api/products"); state.products = data.products; renderProducts(); renderCart();
     } catch (error) {
-      if (staticDemo) { state.products = demoProducts; renderProducts(); renderCart(); return; }
       productGrid.innerHTML = `<p class="form-status is-error">${escapeHtml(error.message)}</p>`;
     }
   }
