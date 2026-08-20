@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Статус заказа · тише</title>
+  <meta name="theme-color" content="#100d0c">
+  <style>
+    :root{color-scheme:dark;--bg:#100d0c;--panel:#1c1714;--text:#f4eee8;--muted:#b8aba3;--accent:#f0b878;--line:rgba(244,238,232,.14);--good:#b9d8b0}
+    *{box-sizing:border-box}body{min-height:100vh;margin:0;padding:24px;color:var(--text);background:radial-gradient(circle at 80% 0,rgba(240,184,120,.1),transparent 35%),var(--bg);font:15px/1.55 system-ui,sans-serif}main{width:min(900px,100%);margin:5vh auto;padding:clamp(28px,6vw,60px);border:1px solid var(--line);border-radius:18px;background:var(--panel)}.brand{color:var(--accent);font-size:19px;font-weight:800;text-decoration:none}h1{margin:28px 0 12px;font-family:Georgia,serif;font-size:clamp(42px,8vw,78px);font-weight:400;line-height:1;letter-spacing:-.055em}.lead{color:var(--muted);font-size:18px}.status-card{display:grid;grid-template-columns:1fr auto;gap:22px;margin:34px 0;padding:22px 0;border-block:1px solid var(--line)}.status-card strong{font-size:22px}.badge{align-self:start;padding:7px 11px;color:#172016;border-radius:99px;background:var(--good);font-weight:700}.details{display:grid;grid-template-columns:1fr 1fr;gap:24px}.box{padding:20px;border:1px solid var(--line);border-radius:12px}.box h2{margin:0 0 12px;font-size:16px}.box p{margin:6px 0;color:var(--muted)}.timeline{margin-top:36px}.event{position:relative;padding:0 0 28px 34px}.event::before{content:"";position:absolute;left:5px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 7px rgba(240,184,120,.12)}.event::after{content:"";position:absolute;left:10px;top:24px;bottom:4px;width:1px;background:var(--line)}.event:last-child::after{display:none}.event strong{display:block}.event time{color:var(--muted);font-size:12px}.note{margin-top:30px;color:var(--muted);font-size:13px}.error{color:#ffb3a7}.back{display:inline-block;min-height:44px;margin-top:14px;padding-block:10px;color:var(--muted)}@media(max-width:650px){body{padding:0;background:var(--panel)}main{min-height:100svh;margin:0;padding:calc(26px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom));border:0;border-radius:0}.details{grid-template-columns:1fr;gap:12px}.status-card{grid-template-columns:1fr;margin-block:28px}.badge{justify-self:start}.box{padding:18px}h1{font-size:clamp(44px,13vw,64px);overflow-wrap:anywhere}}@media(prefers-reduced-motion:no-preference){main{animation:enter .42s cubic-bezier(.23,1,.32,1) both}@keyframes enter{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}}
+  </style>
+</head>
+<body>
+  <main>
+    <a class="brand" href="/">тише</a>
+    <div id="content"><h1>Ищем заказ</h1><p class="lead">Подождите несколько секунд.</p></div>
+    <p class="note">Страница обновляется автоматически. Магазин меняет статус в админке, вы видите его здесь.</p>
+    <a class="back" href="/">Вернуться в магазин</a>
+  </main>
+  <script>
+    (()=>{
+      const params=new URLSearchParams(location.search);const id=params.get("id");const token=params.get("token")||"";const content=document.getElementById("content");const money=new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB",maximumFractionDigits:0});const labels={new:"Ожидает оплаты",confirmed:"Передан кофейне",accepted:"Принят",preparing:"Готовится",ready:"Готов",completed:"Выполнен",cancelled:"Отменён",expired:"Резерв истёк"};const esc=value=>String(value).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[c]);
+      async function load(){if(!id){content.innerHTML='<h1>Заказ не найден</h1><p class="lead error">В ссылке нет номера заказа.</p>';return}try{const response=await fetch(`/api/orders/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`,{cache:"no-store"});const data=await response.json();if(!response.ok)throw new Error(data.message||"Не удалось загрузить заказ.");const order=data.order;document.title=`${order.number} · тише`;content.innerHTML=`<p class="lead">Заказ ${esc(order.number)}</p><h1>${esc(labels[order.status]||order.status)}</h1><div class="status-card"><div><span>Сумма</span><br><strong>${money.format(order.total)}</strong></div><span class="badge">${order.paymentStatus==="paid"?"Оплачено":"Ожидает оплаты"}</span></div><div class="details"><section class="box"><h2>Состав</h2>${order.items.map(item=>`<p>${esc(item.name)}, ${item.weight} г × ${item.quantity}</p>`).join("")}</section><section class="box"><h2>Получение</h2><p>${order.fulfillment==="delivery"?"Доставка":"Самовывоз"}</p><p>${esc(order.address||order.pickupTime||"Магазин уточнит время")}</p></section></div><section class="timeline"><h2>Что происходит</h2>${[...(order.events||[])].reverse().map(event=>`<div class="event"><strong>${esc(event.label)}</strong><time>${new Date(event.at).toLocaleString("ru-RU",{dateStyle:"medium",timeStyle:"short"})}</time></div>`).join("")}</section>`}catch(error){content.innerHTML=`<h1>Не получилось</h1><p class="lead error">${esc(error.message)}</p>`}}
+      load();setInterval(load,10000);
+    })();
+  </script>
+</body>
+</html>
