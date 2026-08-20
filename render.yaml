@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: tishe-coffee-shop
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/products
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PAYMENT_MODE
+        value: test
+      - key: ADMIN_EMAIL
+        value: admin@tishe.local
+      - key: ADMIN_PASSWORD
+        sync: false
