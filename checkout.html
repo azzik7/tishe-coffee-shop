@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Оплата заказа · тише</title>
+  <meta name="theme-color" content="#171311">
+  <style>
+    :root{color-scheme:dark;--bg:#100d0c;--panel:#1c1714;--text:#f4eee8;--muted:#b8aba3;--accent:#f0b878;--line:rgba(244,238,232,.14)}
+    *{box-sizing:border-box}body{min-height:100vh;margin:0;display:grid;place-items:center;padding:24px;color:var(--text);background:radial-gradient(circle at 50% 0,rgba(240,184,120,.12),transparent 42%),var(--bg);font:16px/1.55 system-ui,sans-serif}
+    main{width:min(560px,100%);padding:clamp(28px,6vw,54px);border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 40px 120px rgba(0,0,0,.35)}
+    .brand{color:var(--accent);font-size:18px;font-weight:800;letter-spacing:-.04em}h1{margin:24px 0 12px;font-family:Georgia,serif;font-size:clamp(36px,8vw,62px);font-weight:400;line-height:1;letter-spacing:-.055em}p{color:var(--muted)}.amount{display:flex;justify-content:space-between;gap:20px;margin:30px 0;padding:20px 0;border-block:1px solid var(--line)}.amount strong{color:var(--text);font-size:28px}.btn{width:100%;min-height:52px;padding:0 22px;color:#21160f;border:0;border-radius:999px;background:var(--accent);font:700 15px system-ui;cursor:pointer;touch-action:manipulation;transition:transform 150ms ease,filter 180ms ease}.btn:active{transform:scale(.98)}.btn:disabled{opacity:.6;cursor:wait}.status{min-height:24px;margin:16px 0 0}.success{color:#b9d8b0}.error{color:#ffb3a7}.back{display:inline-block;min-height:44px;margin-top:12px;padding-block:10px;color:var(--muted)}
+    @media(max-width:620px){body{place-items:stretch;padding:0;background:var(--panel)}main{min-height:100svh;padding:calc(28px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));border:0;border-radius:0;box-shadow:none}h1{font-size:clamp(42px,13vw,58px)}.amount{align-items:end}.amount strong{text-align:right}.btn{min-height:56px}}
+    @media(prefers-reduced-motion:no-preference){main{animation:enter .42s cubic-bezier(.23,1,.32,1) both}@keyframes enter{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}}
+  </style>
+</head>
+<body>
+  <main>
+    <span class="brand">тише</span>
+    <h1>Тестовая оплата</h1>
+    <p>Платёжный сервис ещё не подключён. Эта страница проверяет полный путь заказа без банковской карты и списания денег.</p>
+    <div class="amount"><span>К оплате</span><strong id="amount">Загрузка...</strong></div>
+    <button class="btn" id="payButton" type="button">Подтвердить тестовую оплату</button>
+    <p class="status" id="status" role="status"></p>
+    <a class="back" id="trackLink" href="#" hidden>Следить за заказом</a><br>
+    <a class="back" href="/">Вернуться в магазин</a>
+  </main>
+  <script>
+    (()=>{
+      const params=new URLSearchParams(location.search);const paymentId=params.get("paymentId");const token=params.get("token")||"";const button=document.getElementById("payButton");const status=document.getElementById("status");
+      document.getElementById("amount").textContent="Будет рассчитано сервером";
+      if(!paymentId){button.disabled=true;status.textContent="Платёж не найден.";status.className="status error";return}
+      button.addEventListener("click",async()=>{button.disabled=true;button.textContent="Подтверждаем...";status.textContent="";try{const response=await fetch(`/api/payments/${encodeURIComponent(paymentId)}/test-confirm`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({accessToken:token})});const data=await response.json();if(!response.ok)throw new Error(data.message||"Не удалось подтвердить оплату.");document.getElementById("amount").textContent=new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB",maximumFractionDigits:0}).format(data.payment.amount);status.textContent=`Заказ ${data.order.number} оплачен и передан кофейне.`;status.className="status success";button.textContent="Оплачено";const link=document.getElementById("trackLink");link.href=`/order.html?id=${encodeURIComponent(data.order.id)}&token=${encodeURIComponent(token)}`;link.hidden=false}catch(error){status.textContent=error.message;status.className="status error";button.disabled=false;button.textContent="Попробовать ещё раз"}})
+    })();
+  </script>
+</body>
+</html>
