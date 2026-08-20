@@ -2,6 +2,12 @@
   "use strict";
 
   const money = new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB", maximumFractionDigits: 0 });
+  const staticDemo = location.hostname.endsWith("github.io");
+  const demoProducts = [
+    { id: "coffee-soft", name: "Мягкий", subtitle: "Какао и карамель", description: "Спокойный кофе для эспрессо и молочных напитков.", variants: [{ id: "soft-250", weight: 250, price: 790, stock: 40 }, { id: "soft-1000", weight: 1000, price: 2490, stock: 15 }] },
+    { id: "coffee-balance", name: "Баланс", subtitle: "Орех и красное яблоко", description: "Ровная чашка на каждый день, подходит для большинства способов.", variants: [{ id: "balance-250", weight: 250, price: 850, stock: 40 }, { id: "balance-1000", weight: 1000, price: 2690, stock: 15 }] },
+    { id: "coffee-bright", name: "Яркий", subtitle: "Ягоды и тёмный шоколад", description: "Выразительный профиль для фильтра, турки и гейзера.", variants: [{ id: "bright-250", weight: 250, price: 920, stock: 40 }, { id: "bright-1000", weight: 1000, price: 2890, stock: 15 }] }
+  ];
   const state = { products: [], cart: loadCart(), user: null };
   const $ = (selector) => document.querySelector(selector);
   const productGrid = $("#productGrid");
@@ -122,7 +128,10 @@
   async function loadProducts() {
     try {
       const data = await request("/api/products"); state.products = data.products; renderProducts(); renderCart();
-    } catch (error) { productGrid.innerHTML = `<p class="form-status is-error">${escapeHtml(error.message)}</p>`; }
+    } catch (error) {
+      if (staticDemo) { state.products = demoProducts; renderProducts(); renderCart(); return; }
+      productGrid.innerHTML = `<p class="form-status is-error">${escapeHtml(error.message)}</p>`;
+    }
   }
 
   function updateFulfillment() {
@@ -135,6 +144,24 @@
     if (!state.cart.length) { checkoutStatus.textContent = "Сначала добавьте кофе в корзину."; checkoutStatus.classList.add("is-error"); return; }
     if (!checkoutForm.checkValidity()) { checkoutStatus.textContent = "Проверьте обязательные поля."; checkoutStatus.classList.add("is-error"); checkoutForm.reportValidity(); return; }
     const button = checkoutForm.querySelector("button[type=submit]"); const form = new FormData(checkoutForm); button.disabled = true; button.textContent = "Создаём заказ...";
+    if (staticDemo) {
+      const delivery = form.get("fulfillment") === "delivery" ? 350 : 0;
+      const demoOrder = {
+        number: `T-DEMO-${String(Date.now()).slice(-4)}`,
+        total: cartSubtotal() + delivery,
+        paymentStatus: "demo",
+        status: "confirmed",
+        fulfillment: form.get("fulfillment"),
+        address: form.get("address"),
+        pickupTime: form.get("pickupTime"),
+        items: detailedCart().map((item) => ({ name: item.product.name, weight: item.variant.weight, quantity: item.quantity })),
+        createdAt: new Date().toISOString()
+      };
+      localStorage.setItem("tishe_demo_last_order", JSON.stringify(demoOrder));
+      state.cart = []; saveCart(); renderCart();
+      window.location.href = "order.html?demo=1";
+      return;
+    }
     try {
       const created = await request("/api/orders", { method: "POST", body: JSON.stringify({
         items: state.cart, customer: { name: form.get("name"), phone: form.get("phone"), email: form.get("email") }, fulfillment: form.get("fulfillment"), address: form.get("address"), pickupTime: form.get("pickupTime"), comment: form.get("comment")
@@ -157,12 +184,17 @@
   }
 
   async function refreshAccount() {
-    try { state.user = (await request("/api/auth/me")).user; } catch { state.user = null; }
+    if (staticDemo) {
+      try { state.user = JSON.parse(localStorage.getItem("tishe_demo_user") || "null"); } catch { state.user = null; }
+    } else {
+      try { state.user = (await request("/api/auth/me")).user; } catch { state.user = null; }
+    }
     $("#accountButton").textContent = state.user ? state.user.name : "Войти";
     $("#mobileAccountLabel").textContent = state.user ? "Профиль" : "Войти";
     $("#authArea").hidden = Boolean(state.user); $("#profileArea").hidden = !state.user;
     if (!state.user) return;
     $("#profileGreeting").textContent = `${state.user.name}, здесь появятся ваши заказы.`; fillCheckoutFromUser();
+    if (staticDemo) { $("#accountOrders").innerHTML = '<p class="cart-empty">Заказы из демо-оформления сохраняются только на этом устройстве.</p>'; return; }
     try {
       const { orders } = await request("/api/orders");
       $("#accountOrders").innerHTML = orders.length ? orders.map((order) => `<article class="account-order"><strong>${escapeHtml(order.number)} · ${money.format(order.total)}</strong><p>${statusLabel(order.status)}, оплата: ${order.paymentStatus === "paid" ? "оплачено" : "ожидается"}</p></article>`).join("") : '<p class="cart-empty">Заказов пока нет.</p>';
@@ -175,6 +207,10 @@
 
   async function submitAuth(event, endpoint) {
     event.preventDefault(); const form = event.currentTarget; const data = Object.fromEntries(new FormData(form)); const status = $("#authStatus"); status.className = "form-status";
+    if (staticDemo) {
+      state.user = { name: data.name || data.email.split("@")[0], email: data.email, phone: data.phone || "" };
+      localStorage.setItem("tishe_demo_user", JSON.stringify(state.user)); form.reset(); status.textContent = "Готово."; status.classList.add("is-success"); await refreshAccount(); return;
+    }
     try { await request(endpoint, { method: "POST", body: JSON.stringify(data) }); form.reset(); status.textContent = "Готово."; status.classList.add("is-success"); await refreshAccount(); }
     catch (error) { status.textContent = error.message; status.classList.add("is-error"); }
   }
@@ -188,7 +224,7 @@
   $("#accountButton").addEventListener("click", openAccount); $("#mobileAccountButton").addEventListener("click", openAccount); $("#accountClose").addEventListener("click", () => accountDialog.close());
   document.querySelectorAll("[data-auth-tab]").forEach((button) => button.addEventListener("click", () => setAuthTab(button.dataset.authTab)));
   $("#loginForm").addEventListener("submit", (event) => submitAuth(event, "/api/auth/login")); $("#registerForm").addEventListener("submit", (event) => submitAuth(event, "/api/auth/register"));
-  $("#logoutButton").addEventListener("click", async () => { await request("/api/auth/logout", { method: "POST", body: "{}" }); state.user = null; await refreshAccount(); });
+  $("#logoutButton").addEventListener("click", async () => { if (staticDemo) localStorage.removeItem("tishe_demo_user"); else await request("/api/auth/logout", { method: "POST", body: "{}" }); state.user = null; await refreshAccount(); });
 
   const mobileSectionLinks = [...document.querySelectorAll("[data-mobile-section]")];
   const sectionObserver = new IntersectionObserver((entries) => {
